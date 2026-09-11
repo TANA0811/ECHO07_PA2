@@ -1,9 +1,10 @@
 using UnityEngine;
 
 /// <summary>
-/// Controla el movimiento y salto de ECHO-07.
+/// Controla el movimiento, salto y animaciones de ECHO-07.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     private Rigidbody2D rb;
+    private Animator animator;
+
     private float horizontalInput;
     private bool jumpRequested;
     private bool isGrounded;
@@ -25,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -36,6 +40,11 @@ public class PlayerController : MonoBehaviour
             groundCheckRadius,
             groundLayer
         );
+
+        // Actualiza los parámetros del Animator
+        animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
+        animator.SetBool("IsGrounded", isGrounded);
+
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
